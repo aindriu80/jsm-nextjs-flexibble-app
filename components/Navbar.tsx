@@ -7,11 +7,11 @@ import AuthProviders from './AuthProviders'
 type Props = {}
 
 export default function Navbar({}: Props) {
-  const session = null
+  const session = !null
 
   return (
-    <nav className="flex-between navbar">
-      <div className="flex-1 flexStart gap-1-">
+    <nav className="flexBetween navbar">
+      <div className="flex-1 flexStart gap-10">
         <Link href="/">
           <Image src="/logo.svg" width={115} height={43} alt="Flexible" />
         </Link>
