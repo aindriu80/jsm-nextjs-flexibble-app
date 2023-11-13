@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@grafbase/sdk": "^0.8.0",
+    "@grafbase/sdk": "^0.9.1",
     "@headlessui/react": "^1.7.17",
     "@types/jsonwebtoken": "^9.0.5",
     "cloudinary": "^1.41.0",
