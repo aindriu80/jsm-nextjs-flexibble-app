@@ -7,7 +7,7 @@ import AuthProviders from './AuthProviders'
 type Props = {}
 
 export default function Navbar({}: Props) {
-  const session = !null
+  const session = null
 
   return (
     <nav className="flexBetween navbar">
