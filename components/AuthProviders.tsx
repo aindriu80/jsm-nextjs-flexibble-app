@@ -1,6 +1,6 @@
 'use client'
-import React, { useState, useEffect } from 'react';
-import { getProviders, signIn } from 'next-auth';
+import React, { useState, useEffect } from 'react'
+import { getProviders, signIn } from 'next-auth/react'
 
 type Provider = {
   id: string
@@ -16,21 +16,27 @@ type Providers = Record<string, Provider>
 const AuthProviders = () => {
   const [providers, setProviders] = useState<Providers | null>(null)
 
-  useEffect(()=>{
-    const fetchProviders = async()=>{
-    const res = await getProviders();
+  useEffect(() => {
+    const fetchProviders = async () => {
+      const res = await getProviders()
       console.log(res)
 
-    setProviders(res)
+      setProviders(res)
     }
     fetchProviders()
-  },[])
+  }, [])
 
   if (providers) {
     return (
       <div>
         {Object.values(providers).map((provider: Provider, i) => (
-          <button key={i}>{provider.id}</button>
+          <button
+            key={i}
+            title="Sign In"
+            onClick={() => signIn(provider?.id)}
+          >
+            Sign In
+          </button>
         ))}
       </div>
     )
