@@ -1,10 +1,11 @@
-import { aetServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { NextAuthOptions, User } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import jsonwebtoken from "jsonwebtoken";
 import { JWT } from "next-auth/jwt";
-import { SessionInterface } from "@/common.types";
+import { SessionInterface, UserProfile } from "@/common.types";
+import { createUser, getUser } from "./actions";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -28,8 +29,18 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user }: { user: AdapterUser | User }) {
       try {
         // try to get the user if they exist
+        const userExists = (await getUser(user?.email as string)) as {
+          user?: UserProfile;
+        };
 
         // if they don't exist
+        if (!userExists.user) {
+          await createUser(
+            user.name as string,
+            user.email as string,
+            user.image as string,
+          );
+        }
 
         return true;
       } catch (error: any) {
