@@ -1,43 +1,51 @@
-import { createUserMutation, getUserQuery } from "@/graphql";
-import { GraphQLClient } from "graphql-request";
+import { createUserMutation, getUserQuery } from '@/graphql'
+import { GraphQLClient } from 'graphql-request'
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === 'production'
 const apiUrl = isProduction
-  ? process.env.NEXT_PUBLIC_GRAFBASE_API_URL || ""
-  : "http://"
-    ? process.env.NEXT_PUBLIC_GRAFBASE_API_URL || ""
-    : "http://127.0.0.1:4000/graphql";
+  ? process.env.NEXT_PUBLIC_GRAFBASE_API_URL || ''
+  : 'http://'
+  ? process.env.NEXT_PUBLIC_GRAFBASE_API_URL || ''
+  : 'http://127.0.0.1:4000/graphql'
 const apiKey = isProduction
-  ? process.env.NEXT_PUBLIC_GRAFBASE_API_KEY || ""
-  : "letmein";
+  ? process.env.NEXT_PUBLIC_GRAFBASE_API_KEY || ''
+  : 'letmein'
 const serverUrl = isProduction
   ? process.env.NEXT_PUBLIC_URL
-  : "http://localhost:3000";
+  : 'http://localhost:3000'
 
-const client = new GraphQLClient(apiUrl);
+const client = new GraphQLClient(apiUrl)
 
-const makeGraphQLRequst = async (query: string, variables = {}) => {
+const makeGraphQLRequest = async (query: string, variables = {}) => {
   try {
     // client request
     // return await client.request(query,variables)
   } catch (error) {
-    console.log(error);
-    throw error;
+    console.log(error)
+    throw error
   }
-};
+}
 
-export const getUser = (email: string) => {
-  return makeGraphQLRequst(getUserQuery, { email });
-};
+export const getUser = async (email: string) => {
+  client.setHeader('x-api-key', apiKey)
+  try {
+    const result = await makeGraphQLRequest(getUserQuery, { email })
+    return result
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
 
 export const createUser = (name: string, email: string, avatarUrl: string) => {
+  client.setHeader('x-api-key', apiKey)
   const variables = {
     input: {
-      name,
-      email,
-      avatarUrl,
+      name: name,
+      email: email,
+      avatarUrl: avatarUrl,
     },
-  };
+  }
 
-  return makeGraphQLRequst(createUserMutation, variables);
-};
+  return makeGraphQLRequest(createUserMutation, variables)
+}
