@@ -37,6 +37,8 @@ next-env.d.ts
 
 # environment file
 .env
+graphql/.env
 
 # Bun file
 bun.lockb
+
