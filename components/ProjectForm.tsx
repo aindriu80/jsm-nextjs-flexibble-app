@@ -5,6 +5,7 @@ import Image from "next/image";
 import FormField from "./FormField";
 import CustomMenu from "./CustomMenu";
 import { categoryFilters } from "@/constants";
+import Button from "./Button";
 
 type Props = {
   type: string;
@@ -12,7 +13,25 @@ type Props = {
 };
 const ProjectForm = ({ type, session }: Props) => {
   const handleFormSubmit = (e: React.FormEvent) => {};
-  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {};
+  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.includes("image")) {
+      return alert("Please upload an image file");
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string;
+
+      handleStateChange("image", result);
+    };
+  };
+
   const handleStateChange = (fieldName: string, value: string) => {
     setform((prevState) => ({ ...prevState, [fieldName]: value }));
   };
@@ -38,15 +57,15 @@ const ProjectForm = ({ type, session }: Props) => {
           id="image"
           type="file"
           accept="image/*"
-          required={type === "create"}
+          required={type === "create" ? true : false}
           className="form_image-input"
-          onChange={handleChangeImage}
+          onChange={(e) => handleChangeImage(e)}
         />
         {form.image && (
           <Image
             src={form?.image}
-            className="sm:p-10 object-contain z-30"
-            alt="Project Poster"
+            className="sm:p-10 object-contain z-20"
+            alt="image"
             fill
           />
         )}
@@ -55,7 +74,7 @@ const ProjectForm = ({ type, session }: Props) => {
       <FormField
         title="Title"
         state={form.title}
-        placeholder="Flexible"
+        placeholder="Flexibble"
         setState={(value) => handleStateChange("title", value)}
       />
 
@@ -71,7 +90,7 @@ const ProjectForm = ({ type, session }: Props) => {
         title="Website URL"
         state={form.liveSiteUrl}
         placeholder="https://google.ie"
-        setState={(value) => handleStateChange("liveStiteUrl", value)}
+        setState={(value) => handleStateChange("liveSiteUrl", value)}
       />
 
       <FormField
@@ -79,7 +98,7 @@ const ProjectForm = ({ type, session }: Props) => {
         title="Github URL"
         state={form.githubUrl}
         placeholder="https://github.com/aindriu80"
-        setState={(value) => handleStateChange("Github URL", value)}
+        setState={(value) => handleStateChange("githubUrl", value)}
       />
 
       <CustomMenu
@@ -90,7 +109,16 @@ const ProjectForm = ({ type, session }: Props) => {
       />
 
       <div className="flexStart w-full">
-        <button>Create</button>
+        <Button
+          title={
+            isSubmitting
+              ? `${type === "create" ? "Creating" : "Editing"}`
+              : `${type === "create" ? "Create" : "Edit"}`
+          }
+          type="submit"
+          leftIcon={isSubmitting ? "" : "/plus.svg"}
+          isSubmitting={isSubmitting}
+        />
       </div>
     </form>
   );
