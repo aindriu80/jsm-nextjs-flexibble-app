@@ -12,7 +12,15 @@ type Props = {
   session: SessionInterface;
 };
 const ProjectForm = ({ type, session }: Props) => {
-  const handleFormSubmit = (e: React.FormEvent) => {};
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setIsSubmitting(true);
+    try {
+      if (type === "create") {
+      }
+    } catch (error) {}
+  };
   const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const file = e.target.files?.[0];
