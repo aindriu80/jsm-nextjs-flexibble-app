@@ -28,10 +28,10 @@ export const authOptions: NextAuthOptions = {
 
       return encodedToken;
     },
-    // decode: async ({ secret, token }) => {
-    //   const decodedToken = jsonwebtoken.verify(token!, secret)
-    //   return decodedToken as JWT
-    // },
+    decode: async ({ secret, token }) => {
+      const decodedToken = jsonwebtoken.verify(token!, secret);
+      return decodedToken as JWT;
+    },
   },
   theme: {
     colorScheme: "light",
@@ -61,11 +61,9 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async signIn({ user }: { user: AdapterUser | User }) {
-      console.log("this is :", user);
+      console.log("this is user :", user);
       try {
-        const userExists = (await getUser(
-          user?.email as string,
-        )) as unknown as {
+        const userExists = (await getUser(user?.email as string)) as {
           user?: UserProfile;
         };
 
@@ -77,7 +75,7 @@ export const authOptions: NextAuthOptions = {
           );
         }
 
-        // return true
+        return true;
       } catch (error: any) {
         console.log("Error checking if user exists: ", error.message);
         return false;
